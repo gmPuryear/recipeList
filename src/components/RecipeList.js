@@ -57,7 +57,7 @@ export default function RecipeList({recipes}) {
 
 
     return (
-        <>
+        <div className="recipe-list">
             <div>
                 {recipes.map(recipe => {
                     return (
@@ -68,7 +68,9 @@ export default function RecipeList({recipes}) {
                     // it uses keys to know what part of the array it needs to re-render so it ONLY re-render that element
                 })}
             </div>
-            <button>Add Recipe</button>
-        </>
+            <div className="recipe-list__add-recipe-btn-container">
+                <button className="btn btn--primary">Add Recipe</button>
+            </div>
+        </div>
     )
 }

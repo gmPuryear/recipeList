@@ -1,6 +1,6 @@
-import '../css/App.css';
+import '../css/app.css';
 import RecipeList from "./RecipeList";
-import '../css/App.css'
+import '../css/app.css'
 //Components: -left(list of recipes) and right side of screen (edit section of current recipe selected)
 //                 -Particular recipes inside the recipe list
 //                 -ingredients section

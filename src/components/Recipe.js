@@ -1,11 +1,7 @@
 import React from 'react'
-import IngredientList from "./IngredientList";
-
-// Component for each individual recipe
-// export default function Recipe( { name, cookTime, servings, instructions } ) {
+import IngredientList from './IngredientList';
 
 export default function Recipe(props) {
-    // This is the same as on line 5, but were not bringing in a HUGE number of props on one line making it easier to read
     const {
         name,
         cookTime,
@@ -13,33 +9,30 @@ export default function Recipe(props) {
         instructions,
         ingredients
     } = props
-
     return (
-        <div>
-            <div>
-                <h3>{name}</h3>
+        <div className="recipe">
+            <div className="recipe__header">
+                <h3 className="recipe__title">{name}</h3>
                 <div>
-                    <button>Edit</button>
-                    <button>Delete</button>
+                    <button className="btn btn--primary mr-1">Edit</button>
+                    <button className="btn btn--danger">Delete</button>
                 </div>
             </div>
-            <div>
-                <span>Cook Time: </span>
-                <span>{cookTime}</span>
+            <div className="recipe__row">
+                <span className="recipe__label">Cook Time:</span>
+                <span className="recipe__value">{cookTime}</span>
             </div>
-            <div>
-                <span>Servings: </span>
-                <span>{servings}</span>
+            <div className="recipe__row">
+                <span className="recipe__label">Servings:</span>
+                <span className="recipe__value">{servings}</span>
             </div>
-            <div>
-                <span>Instructions:</span>
-                <div>
-                    {instructions}
-                </div>
+            <div className="recipe__row">
+                <span className="recipe__label">Instructions:</span>
+                <div className="recipe__value recipe__instructions recipe__value--indented">{instructions}</div>
             </div>
-            <div>
-                <span>Ingredients:</span>
-                <div>
+            <div className="recipe__row">
+                <span className="recipe__label">Ingredients:</span>
+                <div className="recipe__value recipe__value--indented">
                     <IngredientList ingredients={ingredients} />
                 </div>
             </div>
