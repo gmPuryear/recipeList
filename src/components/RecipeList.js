@@ -1,7 +1,7 @@
 import React from 'react'
 import Recipe from "./Recipe";
 
-export default function RecipeList({recipes}) {
+export default function RecipeList(props) {
     // ***DESTRUCTURING PRACTICE WITH ARRAYS***
     // const arr = [45, 67, 47, 600, 300, 234, 912, 854];
     // const letters = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H']
@@ -55,6 +55,11 @@ export default function RecipeList({recipes}) {
     // }
     // printUser(personOne);
 
+    const {
+        recipes,
+        handleRecipeAdd,
+        handleRecipeDelete
+    } = props
 
     return (
         <div className="recipe-list">
@@ -63,13 +68,19 @@ export default function RecipeList({recipes}) {
                     return (
                         <Recipe key={recipe.id}
                                 {...recipe}
+                                handleRecipeDelete={handleRecipeDelete}
                         />
                     )// needs a unique key so thats why we have the 'key=' part
                     // it uses keys to know what part of the array it needs to re-render so it ONLY re-render that element
                 })}
             </div>
             <div className="recipe-list__add-recipe-btn-container">
-                <button className="btn btn--primary">Add Recipe</button>
+                <button
+                    className="btn btn--primary"
+                    onClick={handleRecipeAdd}
+                >
+                    Add Recipe
+                </button>
             </div>
         </div>
     )
