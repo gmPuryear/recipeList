@@ -1,19 +1,20 @@
-import React from 'react'
-import '../css/app.css';
-import RecipeList from "./RecipeList";
+import React, { useState } from 'react';
+import RecipeList from './RecipeList'
 import '../css/app.css'
-import {useState} from "react";
-import { v4 as uuidv4 } from 'uuid'
+import {v4 as uuidv4} from 'uuid'
 
-//Components: -left(list of recipes) and right side of screen (edit section of current recipe selected)
+//***Components***: -left(list of recipes) and right side of screen (edit section of current recipe selected)
 //                 -Particular recipes inside the recipe list
 //                 -ingredients section
+
+// here we have context that just contains the "handleRecipeAdd" and "handleRecipeDelete" functions
+export const RecipeContext = React.createContext()
 
 function App() {
     // first time we call "useState" it is setting recipe to 'samplerecipes'. Once 'setrecipes' is called
     //  is used to update recipe list.
     // "recipes" is our current state, while setRecipes is our function to change the state
-    const [recipes, setRecipes] = useState(sampleRecipes);
+    const [recipes, setRecipes] = useState(sampleRecipes)
 
     // this function creates a new recipe, then "setRecipes() is called
     const handleRecipeAdd = () => {
@@ -34,7 +35,7 @@ function App() {
         // vv This uses spread operator that expects array of recipes, take current recipes array, spread over it
         // which means we are getting all the recipes we have now, then add a newRecipe then create a new array
         // with all the recipes
-            // Here we are calling "newRecipe", then passing what we want our state to be
+        // Here we are calling "newRecipe", then passing what we want our state to be
         setRecipes([...recipes, newRecipe])
     }
 
@@ -42,13 +43,18 @@ function App() {
         setRecipes(recipes.filter(recipe => recipe.id !== id)) // so give me every recipe
     }
 
+    const recipeContextValue = {
+        handleRecipeAdd: handleRecipeAdd,
+        handleRecipeDelete: handleRecipeDelete
+    }
+
+
     return (
-        <RecipeList
-            recipes={recipes}  // recipe prop that will pass in all sample recipes
-            handleRecipeAdd={handleRecipeAdd}
-            handleRecipeDelete={handleRecipeDelete}
-        />
-    );
+        // were wrapping everything we are returning inside of context and providing that value for everything inside it
+        <RecipeContext.Provider value={recipeContextValue}>
+            <RecipeList recipes={recipes} />
+        </RecipeContext.Provider>
+    )
 
 
 }

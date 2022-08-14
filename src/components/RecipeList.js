@@ -1,7 +1,8 @@
-import React from 'react'
+import React, { useContext } from 'react'
 import Recipe from "./Recipe";
+import { RecipeContext } from './App';
 
-export default function RecipeList(props) {
+export default function RecipeList({ recipes }) {
     // ***DESTRUCTURING PRACTICE WITH ARRAYS***
     // const arr = [45, 67, 47, 600, 300, 234, 912, 854];
     // const letters = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H']
@@ -55,23 +56,16 @@ export default function RecipeList(props) {
     // }
     // printUser(personOne);
 
-    const {
-        recipes,
-        handleRecipeAdd,
-        handleRecipeDelete
-    } = props
+    // gets the add method which is used in the onclick function
+    const { handleRecipeAdd } = useContext(RecipeContext)
 
     return (
         <div className="recipe-list">
             <div>
                 {recipes.map(recipe => {
                     return (
-                        <Recipe key={recipe.id}
-                                {...recipe}
-                                handleRecipeDelete={handleRecipeDelete}
-                        />
-                    )// needs a unique key so thats why we have the 'key=' part
-                    // it uses keys to know what part of the array it needs to re-render so it ONLY re-render that element
+                        <Recipe key={recipe.id} {...recipe} />
+                    )
                 })}
             </div>
             <div className="recipe-list__add-recipe-btn-container">
