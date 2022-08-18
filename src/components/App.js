@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import RecipeList from './RecipeList'
 import '../css/app.css'
 import {v4 as uuidv4} from 'uuid'
@@ -7,14 +7,43 @@ import {v4 as uuidv4} from 'uuid'
 //                 -Particular recipes inside the recipe list
 //                 -ingredients section
 
+
+
+
 // here we have context that just contains the "handleRecipeAdd" and "handleRecipeDelete" functions
 export const RecipeContext = React.createContext()
+const LOCAL_STORAGE_KEY = 'cookingWithReact.recipes'
 
 function App() {
     // first time we call "useState" it is setting recipe to 'samplerecipes'. Once 'setrecipes' is called
     //  is used to update recipe list.
     // "recipes" is our current state, while setRecipes is our function to change the state
-    const [recipes, setRecipes] = useState(sampleRecipes)
+    const [recipes, setRecipes] = useState(() => {
+        const recipeJSON = localStorage.getItem(LOCAL_STORAGE_KEY);
+        if (recipeJSON == null) {
+            return sampleRecipes;
+        } else {
+            return JSON.parse(recipeJSON);
+        }
+    })
+
+    // *** No longer using this useEffect ***
+    // useEffect(() => {
+        // we only want this to run once (loads all recipes) when the application is loaded, so we put an empty []
+        // const recipeJSON = localStorage.getItem(LOCAL_STORAGE_KEY);
+    //     if (recipeJSON !== null) {setRecipes(JSON.parse(recipeJSON))};
+    // },[])
+
+    // lets us actually do some sort of side effect everytime we render the application.
+        // everytime change something, this hook is called again. Passing an array with all dependencies
+        // you want to depend on.
+    useEffect(() => {
+        // the second parameter to useEffect tells when you actaully want to call the function
+            // an empty array means you want the function to run right when the application loads
+            // if the array changes, then the component will re-update itself
+            // Local storage can ONLY store strings, so JSON.stringify entries
+        localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(recipes));
+    }, [recipes])
 
     // this function creates a new recipe, then "setRecipes() is called
     const handleRecipeAdd = () => {
@@ -99,3 +128,4 @@ const sampleRecipes = [
 
 
 export default App;
+

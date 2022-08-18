@@ -12,6 +12,15 @@ export default function Recipe(props) {
         instructions,
         ingredients
     } = props
+
+    // this useEffet will only run in the first render
+    // useEffect(() => {
+    //     console.log('Render')
+    //     return () => {
+    //         console.log('Unmount')
+    //     }
+    // }, []);
+    
     return (
         <div className="recipe">
             <div className="recipe__header">
