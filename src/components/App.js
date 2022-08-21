@@ -4,6 +4,8 @@ import '../css/app.css'
 import {v4 as uuidv4} from 'uuid'
 import RecipeEdit from './RecipeEdit'
 
+// *** anytime you build something in REACT on existing infrastructure, the application reacts to the change***
+
 //***Components***: -left(list of recipes) and right side of screen (edit section of current recipe selected)
 //                 -Particular recipes inside the recipe list
 //                 -ingredients section
@@ -16,7 +18,6 @@ const LOCAL_STORAGE_KEY = 'cookingWithReact.recipes'
 function App() {
     // store state for editing a recipe and a function that sets the recipe ID. No default value
     const [selectedRecipeId, setSelectedRecipeId] = useState();
-    console.log(selectedRecipe)
 
     // first time we call "useState" it is setting recipe to 'samplerecipes'. Once 'setrecipes' is called
     //  is used to update recipe list.
@@ -75,6 +76,17 @@ function App() {
         setRecipes([...recipes, newRecipe])
     }
 
+    // we are getting the id of the recipe we want to change and the new recipe that we are going to replace the old recipe with
+    function handleRecipeChange(id, recipe) {
+        // this is setting the variable to a copy of the array with all recipes. Creating a "duplicate" of the original
+        const newRecipes = [...recipes];
+        // want to find the index of the wanted recipe by comparing it to the given id
+        const index = newRecipes.findIndex(r => r.id === id);
+        // setting the the element @ index 'index' to the value of recipe. So were just swapping out a recipe in our array
+        newRecipes[index] = recipe;
+        setRecipes(newRecipes)
+    }
+
     function handleRecipeDelete(id) {
         setRecipes(recipes.filter(recipe => recipe.id !== id)) // so give me every recipe
     }
@@ -82,7 +94,8 @@ function App() {
     const recipeContextValue = {
         handleRecipeAdd: handleRecipeAdd,
         handleRecipeDelete: handleRecipeDelete,
-        handleRecipeSelect: handleRecipeSelect
+        handleRecipeSelect: handleRecipeSelect,
+        handleRecipeChange: handleRecipeChange
     }
 
     function handleRecipeSelect(id) {

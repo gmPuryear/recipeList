@@ -1,7 +1,25 @@
-import React from 'react'
+import React, { useContext } from 'react'
 import RecipeIngredientEdit from './RecipeIngredientEdit'
+import { RecipeContext} from './App'
 
 export default function RecipeEdit({recipe}) {
+    const { handleRecipeChange } = useContext(RecipeContext)
+
+    function handleChange(changes) {
+        console.log(changes);
+        // here we are taking everything from recipe and everything from changes and OVERWRITING everything in changes
+            // we are actually creating a brand new object, not editing the existing one
+            // NEVER OVERRIDE PROPS OR STATE UNLESS HAVE GOOD REASON
+        handleRecipeChange(recipe.id, { ...recipe, ...changes})
+    }
+
+    function handleIngredientChange(id, ingredient) {
+        // creating a duplicate of the current array
+        const newIngredients = [...recipe.ingredients]
+        const index = newIngredients.findIndex(ingredient => ingredient.id === id)
+        newIngredients[index] = ingredient
+        handleChange({ ingredients: newIngredients })
+    }
 
     return (
         <div className="recipe-edit">
@@ -19,6 +37,7 @@ export default function RecipeEdit({recipe}) {
                     name="name"
                     id="name"
                     value={recipe.name}
+                    onInput={e => handleChange({ name: e.target.value })}
                     className="recipe-edit__input"/>
                 <label
                     htmlFor="cookTime"
@@ -30,6 +49,7 @@ export default function RecipeEdit({recipe}) {
                     name="cookTime"
                     id="cookTime"
                     value={recipe.cookTime}
+                    onInput={e => handleChange({ cookTime: e.target.value })}
                     className="recipe-edit__input"/>
                 <label
                     htmlFor="servings"
@@ -42,6 +62,9 @@ export default function RecipeEdit({recipe}) {
                     name="servings"
                     id="servings"
                     value={recipe.servings}
+                    // e.target.value is ALWAYS a string, not a number!!!
+                        // without the:  || '' NaN would be displayed. So we put an empty string as fallback value
+                    onInput={e => handleChange({ servings: parseInt(e.target.value) || '' })}
                     className="recipe-edit__input"/>
                 <label
                     htmlFor="instructions"
@@ -51,6 +74,7 @@ export default function RecipeEdit({recipe}) {
                 <textarea
                     name="instructions"
                     id="instructions"
+                    onInput={e => handleChange({ instructions: e.target.value })}
                     value={recipe.instructions}
                     className="recipe-edit__input"/>
             </div>
@@ -63,6 +87,7 @@ export default function RecipeEdit({recipe}) {
                 {recipe.ingredients.map(ingredient => (
                     <RecipeIngredientEdit
                         key={ingredient.id}
+                        handleIngredientChange={handleIngredientChange}
                         ingredient={ingredient}
                     />
                 ))}
