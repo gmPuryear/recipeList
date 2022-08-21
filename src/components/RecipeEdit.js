@@ -1,12 +1,13 @@
 import React, { useContext } from 'react'
 import RecipeIngredientEdit from './RecipeIngredientEdit'
 import { RecipeContext} from './App'
+import {v4 as uuidv4} from 'uuid'
 
 export default function RecipeEdit({recipe}) {
-    const { handleRecipeChange } = useContext(RecipeContext)
+    // getting these from our context
+    const { handleRecipeChange, handleRecipeSelect } = useContext(RecipeContext)
 
     function handleChange(changes) {
-        console.log(changes);
         // here we are taking everything from recipe and everything from changes and OVERWRITING everything in changes
             // we are actually creating a brand new object, not editing the existing one
             // NEVER OVERRIDE PROPS OR STATE UNLESS HAVE GOOD REASON
@@ -21,10 +22,35 @@ export default function RecipeEdit({recipe}) {
         handleChange({ ingredients: newIngredients })
     }
 
+    function handleIngredientAdd() {
+        const newIngredient = {
+            id: uuidv4(),
+            name: '',
+            amount: ''
+        }
+        // This -> [...recipe.ingredients] is just a copy of the array of our ingredients, and we are adding
+            // newIngredient to the end of that array
+            // SO now we have an object that has all the ingredient
+        handleChange({ ingredients: [...recipe.ingredients, newIngredient]})
+    }
+
+    function handleIngredientDelete(id) {
+        handleChange({
+            // filtering the list so we are only getting the ingredients that do NOT have the id
+            ingredients: recipe.ingredients.filter(ingredient => ingredient.id !== id) })
+    }
+
     return (
         <div className="recipe-edit">
             <div className="recipe-edit__remove-button-container">
-                <button className="btn recipe-edit__remove-button">&times;</button>
+                <button
+                    className="btn recipe-edit__remove-button"
+                    // this makes it so that deselects the current recipe being edited because the selectedrecipe id is
+                        // just being set to undefined
+                    onClick={() => handleRecipeSelect(undefined)}
+                >
+                    &times;
+                </button>
             </div>
             <div className="recipe-edit__details-grid">
                 <label
@@ -88,12 +114,18 @@ export default function RecipeEdit({recipe}) {
                     <RecipeIngredientEdit
                         key={ingredient.id}
                         handleIngredientChange={handleIngredientChange}
+                        handleIngredientDelete={handleIngredientDelete}
                         ingredient={ingredient}
                     />
                 ))}
             </div>
             <div className="recipe-edit__add-ingredient-btn-container">
-                <button className="btn btn--primary">Add Ingredient</button>
+                <button
+                    className="btn btn--primary"
+                    onClick={() => handleIngredientAdd()}
+                >
+                    Add Ingredient
+                </button>
             </div>
         </div>
     )

@@ -54,21 +54,24 @@ function App() {
     }, [recipes])
 
     // this function creates a new recipe, then "setRecipes() is called
+        // this is also the default recipe that will pop up on the right for you to add the new recipe
     function handleRecipeAdd() {
         const newRecipe = {
             id: uuidv4(),
-            name: 'New',
+            name: '',
             servings: 1,
-            cookTime: '1:00',
-            instructions: 'Instr.',
+            cookTime: '',
+            instructions: '',
             ingredients: [
                 {
                     id: uuidv4(),
-                    name: 'Name',
-                    amount: '1 Tbs'
+                    name: '',
+                    amount: ''
                 }
             ]
         }
+        // this adds a default recipe to be added in the right column and you can see the changes being made in the left
+        setSelectedRecipeId(newRecipe.id)
         // vv This uses spread operator that expects array of recipes, take current recipes array, spread over it
         // which means we are getting all the recipes we have now, then add a newRecipe then create a new array
         // with all the recipes
@@ -88,6 +91,12 @@ function App() {
     }
 
     function handleRecipeDelete(id) {
+        // this IF statement is used to clear out a recipe id when we dont have a recipe with that id anymore
+            // so, if selectedRecipeId does not exist and equals the ID we passed in were deleting the current recipe we
+            // deleted
+        if (selectedRecipeId !== null && selectedRecipeId === id) {
+            setSelectedRecipeId(undefined);
+        }
         setRecipes(recipes.filter(recipe => recipe.id !== id)) // so give me every recipe
     }
 
@@ -153,6 +162,6 @@ const sampleRecipes = [
     }
 ]
 
-
+// this means that the App function is the actual default function that will be exported, so the App component in other words
 export default App;
 
