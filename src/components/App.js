@@ -10,6 +10,26 @@ import RecipeEdit from './RecipeEdit'
 //                 -Particular recipes inside the recipe list
 //                 -ingredients section
 
+//***TIPS***
+    // 1. Try to make sure all state, effect, props, and related logic in one section at the top of a component
+    // 2. Put all functions in a group right before the component's return statement
+    // 3. Break out into components as much as possible no matter how small. As many components as possible. That way
+        // it makes it easier to debug and make it easier to use a component multiple times when needed
+        // BUT when is it TOO SMALL? If you will never ever use it again or its too much work to break it out and pass it things
+    // 4. Have consistent naming with function names, like 'handle' which is for an event listener
+    // 5. Break things into multiple lines so it makes it easier to read instead of one massive line of code
+    // 6. When to use context vs props to get info:
+        // props: better when only passing info down one level, so like from parent to child
+        // context: when passing from a parent multiple levels of children or want to pass it multiple sections in your app
+            // that are not directly linked to that parent
+        // context use cont.: only use it really inside the main application components so like in App,
+            // "export const RecipeContext = React.createContext()" is in App.js
+            // or like a sidebar with a ton of info, it would be good to use context for the sidebar to share info to children
+    // 7. Do not change variables that come in through props or state. Only use the 'setState' calls. Instead, just
+        // create a copy of the thing you want then call the set function
+    // 8. Just store IDs inside state instead of an actual object so that you're only referencing the same object and
+        // you dont have to worry about them being different.
+
 
 // here we have context that just contains the "handleRecipeAdd" and "handleRecipeDelete" functions
 export const RecipeContext = React.createContext()
