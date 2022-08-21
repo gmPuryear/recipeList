@@ -2,12 +2,11 @@ import React, { useState, useEffect } from 'react';
 import RecipeList from './RecipeList'
 import '../css/app.css'
 import {v4 as uuidv4} from 'uuid'
+import RecipeEdit from './RecipeEdit'
 
 //***Components***: -left(list of recipes) and right side of screen (edit section of current recipe selected)
 //                 -Particular recipes inside the recipe list
 //                 -ingredients section
-
-
 
 
 // here we have context that just contains the "handleRecipeAdd" and "handleRecipeDelete" functions
@@ -15,6 +14,10 @@ export const RecipeContext = React.createContext()
 const LOCAL_STORAGE_KEY = 'cookingWithReact.recipes'
 
 function App() {
+    // store state for editing a recipe and a function that sets the recipe ID. No default value
+    const [selectedRecipeId, setSelectedRecipeId] = useState();
+    console.log(selectedRecipe)
+
     // first time we call "useState" it is setting recipe to 'samplerecipes'. Once 'setrecipes' is called
     //  is used to update recipe list.
     // "recipes" is our current state, while setRecipes is our function to change the state
@@ -26,6 +29,10 @@ function App() {
             return JSON.parse(recipeJSON);
         }
     })
+
+    // go through all recipes and find the recipe with the given ID of selected recipe ID and that is our current recipe.
+    // if there has no selected recipe, then it would be undefined. Used to edit recipe
+    const selectedRecipe = recipes.find(recipe => recipe.id === selectedRecipeId)
 
     // *** No longer using this useEffect ***
     // useEffect(() => {
@@ -42,11 +49,11 @@ function App() {
             // an empty array means you want the function to run right when the application loads
             // if the array changes, then the component will re-update itself
             // Local storage can ONLY store strings, so JSON.stringify entries
-        localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(recipes));
+        localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(recipes))
     }, [recipes])
 
     // this function creates a new recipe, then "setRecipes() is called
-    const handleRecipeAdd = () => {
+    function handleRecipeAdd() {
         const newRecipe = {
             id: uuidv4(),
             name: 'New',
@@ -68,13 +75,18 @@ function App() {
         setRecipes([...recipes, newRecipe])
     }
 
-    const handleRecipeDelete = (id) => {
+    function handleRecipeDelete(id) {
         setRecipes(recipes.filter(recipe => recipe.id !== id)) // so give me every recipe
     }
 
     const recipeContextValue = {
         handleRecipeAdd: handleRecipeAdd,
-        handleRecipeDelete: handleRecipeDelete
+        handleRecipeDelete: handleRecipeDelete,
+        handleRecipeSelect: handleRecipeSelect
+    }
+
+    function handleRecipeSelect(id) {
+        setSelectedRecipeId(id);
     }
 
 
@@ -82,6 +94,8 @@ function App() {
         // were wrapping everything we are returning inside of context and providing that value for everything inside it
         <RecipeContext.Provider value={recipeContextValue}>
             <RecipeList recipes={recipes} />
+            {/*if selectedRecipe is true, then render "recipeEdit", so if it is undefined (false), it wont render it. Kind of like ternarty*/}
+            {selectedRecipe && <RecipeEdit recipe={selectedRecipe}/>}
         </RecipeContext.Provider>
     )
 
@@ -112,7 +126,7 @@ const sampleRecipes = [
         name: "Plain Pork",
         servings: 5,
         cookTime: '0:45',
-        instructions: '1. Put paprika on pork\n 2. Put pork in oven\n3. Eat pork',
+        instructions: '1. Put paprika on pork\n2. Put pork in oven\n3. Eat pork',
         ingredients: [{
             id: 1,
             name: 'Pork',
